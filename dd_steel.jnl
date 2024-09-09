@@ -1,0 +1,5 @@
+# Save by NOMAD-NB on 2024_09_10-00.44.28; build 2022 2021_09_15-21.27.30 176069
+from abaqus import *
+upgradeMdb('C:/temp/Ductile_Damage/dd_steel-2021.cae', 
+    'C:/temp/Ductile_Damage/dd_steel.cae')
+# Save by NOMAD-NB on 2024_09_10-00.44.28; build 2022 2021_09_15-21.27.30 176069

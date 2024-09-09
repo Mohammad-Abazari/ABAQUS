@@ -1,0 +1,679 @@
+# Save by mohab on 2021_10_26-16.02.31; build 2021 2020_03_06-18.20.37 167380
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models.changeKey(fromName='Model-1', toName='Model-Standard')
+mdb.models['Model-Standard'].ConstrainedSketch(name='__profile__', sheetSize=
+    200.0)
+mdb.models['Model-Standard'].sketches['__profile__'].rectangle(point1=(-23.75, 
+    21.25), point2=(32.5, -6.25))
+mdb.models['Model-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(-11.25, 15.0), point1=(-10.0, 12.5))
+mdb.models['Model-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(-2.5, 3.75), point1=(0.0, 1.25))
+mdb.models['Model-Standard'].sketches['__profile__'].CircleByCenterPerimeter(
+    center=(-13.75, 0.0), point1=(-15.0, -2.5))
+mdb.models['Model-Standard'].Part(dimensionality=THREE_D, name='Part-1', type=
+    DEFORMABLE_BODY)
+mdb.models['Model-Standard'].parts['Part-1'].BaseShell(sketch=
+    mdb.models['Model-Standard'].sketches['__profile__'])
+del mdb.models['Model-Standard'].sketches['__profile__']
+mdb.models['Model-Standard'].Material(name='Steel')
+mdb.models['Model-Standard'].materials['Steel'].Elastic(table=((210000.0, 0.3), 
+    ))
+mdb.models['Model-Standard'].materials['Steel'].Plastic(table=((320.0, 0.0), (
+    500.0, 0.6)))
+mdb.models['Model-Standard'].materials['Steel'].DuctileDamageInitiation(table=(
+    (0.15, 0.0, 0.0), ))
+mdb.models['Model-Standard'].materials['Steel'].ductileDamageInitiation.DamageEvolution(
+    table=((0.03, ), ), type=DISPLACEMENT)
+mdb.models['Model-Standard'].HomogeneousSolidSection(material='Steel', name=
+    'Section-1', thickness=1.0)
+del mdb.models['Model-Standard'].sections['Section-1']
+mdb.models['Model-Standard'].HomogeneousShellSection(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Steel', name=
+    'Section-1', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT
+    , preIntegrate=OFF, temperature=GRADIENT, thickness=1.0, thicknessField='', 
+    thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+mdb.models['Model-Standard'].parts['Part-1'].SectionAssignment(offset=0.0, 
+    offsetField='', offsetType=MIDDLE_SURFACE, region=Region(
+    faces=mdb.models['Model-Standard'].parts['Part-1'].faces.getSequenceFromMask(
+    mask=('[#1 ]', ), )), sectionName='Section-1', thicknessAssignment=
+    FROM_SECTION)
+mdb.models['Model-Standard'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-Standard'].rootAssembly.Instance(dependent=ON, name=
+    'Part-1-1', part=mdb.models['Model-Standard'].parts['Part-1'])
+mdb.models['Model-Standard'].StaticStep(initialInc=0.01, maxInc=0.1, maxNumInc=
+    100000, minInc=1e-14, name='Step-1', previous='Initial')
+mdb.models['Model-Standard'].EncastreBC(createStepName='Step-1', localCsys=None
+    , name='BC-1', region=Region(
+    edges=mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#10 ]', ), )))
+mdb.models['Model-Standard'].DisplacementBC(amplitude=UNSET, createStepName=
+    'Step-1', distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None
+    , name='BC-2', region=Region(
+    edges=mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'].edges.getSequenceFromMask(
+    mask=('[#40 ]', ), )), u1=3.0, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, 
+    ur3=UNSET)
+mdb.models['Model-Standard'].rootAssembly.makeIndependent(instances=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'], ))
+mdb.models['Model-Standard'].rootAssembly.seedPartInstance(deviationFactor=0.1, 
+    minSizeFactor=0.1, regions=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'], ), size=
+    5.6)
+mdb.models['Model-Standard'].rootAssembly.seedPartInstance(deviationFactor=0.1, 
+    minSizeFactor=0.1, regions=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'], ), size=
+    0.5)
+mdb.models['Model-Standard'].rootAssembly.generateMesh(regions=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'], ))
+mdb.models['Model-Standard'].rootAssembly.setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF, 
+    hourglassControl=DEFAULT, elemDeletion=ON), ElemType(elemCode=S3, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'].faces.getSequenceFromMask(
+    ('[#1 ]', ), ), ))
+# Save by mohab on 2021_10_26-16.20.08; build 2021 2020_03_06-18.20.37 167380
+from part import *
+from material import *
+from section import *
+from optimization import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-Standard'].fieldOutputRequests['F-Output-1'].setValues(
+    variables=('S', 'PE', 'PEEQ', 'PEMAG', 'LE', 'U', 'RF', 'CF', 'CSTRESS', 
+    'CDISP', 'STATUS'))
+mdb.models['Model-Standard'].rootAssembly.setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF, 
+    hourglassControl=DEFAULT), ElemType(elemCode=S3, elemLibrary=STANDARD)), 
+    regions=(
+    mdb.models['Model-Standard'].rootAssembly.instances['Part-1-1'].faces.getSequenceFromMask(
+    ('[#1 ]', ), ), ))
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-Standard', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='DD-shell', nodalOutputPrecision=SINGLE, 
+    numCpus=4, numDomains=4, numGPUs=2, queue=None, resultsFormat=ODB, scratch=
+    '', type=ANALYSIS, userSubroutine='', waitHours=0, waitMinutes=0)
+mdb.jobs['DD-shell'].submit(consistencyChecking=OFF)
+mdb.jobs['DD-shell']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'clientHost': 'Nomad-NB', 'handle': 0, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST LE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'STRAIN OUTPUT REQUEST LE IS NOT VALID FOR SOME ELEMENTS IN THIS ANALYSIS. THIS REQUEST IS SWITCHED TO THE STRAIN MEASURE, E.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': BATCHPRE_PHASE, 
+    'message': 'OUTPUT REQUEST CF HAS BEEN REMOVED AS THERE ARE NO APPLICABLE LOADS IN THIS STEP', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(ODB_FILE, {'phase': BATCHPRE_PHASE, 
+    'file': 'C:\\temp\\DD-shell.odb', 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(COMPLETED, {'phase': BATCHPRE_PHASE, 
+    'message': 'Analysis phase complete', 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'clientHost': 'Nomad-NB', 'handle': 7984, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STEP, {'phase': STANDARD_PHASE, 'stepId': 1, 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 0, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(MEMORY_ESTIMATE, {'phase': STANDARD_PHASE, 
+    'jobName': 'DD-shell', 'memory': 133.0})
+mdb.jobs['DD-shell']._Message(PHYSICAL_MEMORY, {'phase': STANDARD_PHASE, 
+    'physical_memory': 8073.0, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(MINIMUM_MEMORY, {'minimum_memory': 27.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.01, 'attempts': 1, 
+    'timeIncrement': 0.01, 'increment': 1, 'stepTime': 0.01, 'step': 1, 
+    'jobName': 'DD-shell', 'severe': 0, 'iterations': 1, 
+    'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 1, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 15 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 70 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.01, 'attempts': ' 1U', 
+    'timeIncrement': 0.01, 'increment': 2, 'stepTime': 0.01, 'step': 1, 
+    'jobName': 'DD-shell', 'severe': 0, 'iterations': 5, 
+    'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.0125, 'attempts': 2, 
+    'timeIncrement': 0.0025, 'increment': 2, 'stepTime': 0.0125, 'step': 1, 
+    'jobName': 'DD-shell', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 2, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.01625, 'attempts': 1, 
+    'timeIncrement': 0.00375, 'increment': 3, 'stepTime': 0.01625, 'step': 1, 
+    'jobName': 'DD-shell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 3, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 15 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 135 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.01625, 'attempts': ' 1U', 
+    'timeIncrement': 0.005625, 'increment': 4, 'stepTime': 0.01625, 'step': 1, 
+    'jobName': 'DD-shell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.01765625, 'attempts': 2, 
+    'timeIncrement': 0.00140625, 'increment': 4, 'stepTime': 0.01765625, 
+    'step': 1, 'jobName': 'DD-shell', 'severe': 0, 'iterations': 3, 
+    'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 4, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.019765625, 'attempts': 1, 
+    'timeIncrement': 0.002109375, 'increment': 5, 'stepTime': 0.019765625, 
+    'step': 1, 'jobName': 'DD-shell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 5, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.0229296875, 
+    'attempts': 1, 'timeIncrement': 0.0031640625, 'increment': 6, 
+    'stepTime': 0.0229296875, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 6, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.02609375, 'attempts': 1, 
+    'timeIncrement': 0.0031640625, 'increment': 7, 'stepTime': 0.02609375, 
+    'step': 1, 'jobName': 'DD-shell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 7, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.0292578125, 
+    'attempts': 1, 'timeIncrement': 0.0031640625, 'increment': 8, 
+    'stepTime': 0.0292578125, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 8, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.032421875, 'attempts': 1, 
+    'timeIncrement': 0.0031640625, 'increment': 9, 'stepTime': 0.032421875, 
+    'step': 1, 'jobName': 'DD-shell', 'severe': 0, 'iterations': 4, 
+    'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 9, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.0355859375, 
+    'attempts': 1, 'timeIncrement': 0.0031640625, 'increment': 10, 
+    'stepTime': 0.0355859375, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 10, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.04033203125, 
+    'attempts': 1, 'timeIncrement': 0.00474609375, 'increment': 11, 
+    'stepTime': 0.04033203125, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 11, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.047451171875, 
+    'attempts': 1, 'timeIncrement': 0.007119140625, 'increment': 12, 
+    'stepTime': 0.047451171875, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 12, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.0581298828125, 
+    'attempts': 1, 'timeIncrement': 0.0106787109375, 'increment': 13, 
+    'stepTime': 0.0581298828125, 'step': 1, 'jobName': 'DD-shell', 'severe': 0, 
+    'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 13, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.07414794921875, 
+    'attempts': 1, 'timeIncrement': 0.01601806640625, 'increment': 14, 
+    'stepTime': 0.07414794921875, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 14, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.098175048828125, 
+    'attempts': 1, 'timeIncrement': 0.024027099609375, 'increment': 15, 
+    'stepTime': 0.098175048828125, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 15, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 4 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 2 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 50 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 120 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 395 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.098175048828125, 
+    'attempts': ' 1U', 'timeIncrement': 0.0360406494140625, 'increment': 16, 
+    'stepTime': 0.098175048828125, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.107185211181641, 
+    'attempts': 2, 'timeIncrement': 0.00901016235351563, 'increment': 16, 
+    'stepTime': 0.107185211181641, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 16, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 2 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 60 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 405 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 570 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT IS SO LARGE THAT THE PROGRAM WILL NOT ATTEMPT THE PLASTICITY CALCULATION AT 5 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.107185211181641, 
+    'attempts': ' 1U', 'timeIncrement': 0.0135152435302734, 'increment': 17, 
+    'stepTime': 0.107185211181641, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.110564022064209, 
+    'attempts': 2, 'timeIncrement': 0.00337881088256836, 'increment': 17, 
+    'stepTime': 0.110564022064209, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 17, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.115632238388062, 
+    'attempts': 1, 'timeIncrement': 0.00506821632385254, 'increment': 18, 
+    'stepTime': 0.115632238388062, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 18, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 2 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 45 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 460 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 820 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 4 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 1855 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.115632238388062, 
+    'attempts': ' 1U', 'timeIncrement': 0.00760232448577881, 'increment': 19, 
+    'stepTime': 0.115632238388062, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 25 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'THE STRAIN INCREMENT HAS EXCEEDED FIFTY TIMES THE STRAIN TO CAUSE FIRST YIELD AT 410 POINTS', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.115632238388062, 
+    'attempts': ' 2U', 'timeIncrement': 0.0019005811214447, 'increment': 19, 
+    'stepTime': 0.115632238388062, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116107383668423, 
+    'attempts': 3, 'timeIncrement': 0.000475145280361176, 'increment': 19, 
+    'stepTime': 0.116107383668423, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 19, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116582528948784, 
+    'attempts': 1, 'timeIncrement': 0.000475145280361176, 'increment': 20, 
+    'stepTime': 0.116582528948784, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 20, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116582528948784, 
+    'attempts': ' 1U', 'timeIncrement': 0.000475145280361176, 'increment': 21, 
+    'stepTime': 0.116582528948784, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116701315268874, 
+    'attempts': 2, 'timeIncrement': 0.000118786320090294, 'increment': 21, 
+    'stepTime': 0.116701315268874, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 21, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116701315268874, 
+    'attempts': ' 1U', 'timeIncrement': 0.000178179480135441, 'increment': 22, 
+    'stepTime': 0.116701315268874, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 6, 'phase': STANDARD_PHASE, 'equilibrium': 6})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116745860138908, 
+    'attempts': 2, 'timeIncrement': 4.45448700338602e-05, 'increment': 22, 
+    'stepTime': 0.116745860138908, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 22, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116812677443959, 
+    'attempts': 1, 'timeIncrement': 6.68173050507903e-05, 'increment': 23, 
+    'stepTime': 0.116812677443959, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 23, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116812677443959, 
+    'attempts': ' 1U', 'timeIncrement': 0.000100225957576185, 'increment': 24, 
+    'stepTime': 0.116812677443959, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116812677443959, 
+    'attempts': ' 2U', 'timeIncrement': 2.50564893940464e-05, 'increment': 24, 
+    'stepTime': 0.116812677443959, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116818941566307, 
+    'attempts': 3, 'timeIncrement': 6.26412234851159e-06, 'increment': 24, 
+    'stepTime': 0.116818941566307, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 24, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.11682833774983, 
+    'attempts': 1, 'timeIncrement': 9.39618352276739e-06, 'increment': 25, 
+    'stepTime': 0.11682833774983, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 2, 'phase': STANDARD_PHASE, 'equilibrium': 2})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 25, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.11682833774983, 
+    'attempts': ' 1U', 'timeIncrement': 1.40942752841511e-05, 'increment': 26, 
+    'stepTime': 0.11682833774983, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116831861318651, 
+    'attempts': 2, 'timeIncrement': 3.52356882103777e-06, 'increment': 26, 
+    'stepTime': 0.116831861318651, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 3, 'phase': STANDARD_PHASE, 'equilibrium': 3})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 26, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(WARNING, {'phase': STANDARD_PHASE, 
+    'message': 'The system matrix has 1 negative eigenvalues.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116831861318651, 
+    'attempts': ' 1U', 'timeIncrement': 5.28535323155666e-06, 'increment': 27, 
+    'stepTime': 0.116831861318651, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116831861318651, 
+    'attempts': ' 2U', 'timeIncrement': 1.32133830788916e-06, 'increment': 27, 
+    'stepTime': 0.116831861318651, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832191653228, 
+    'attempts': 3, 'timeIncrement': 3.30334576972291e-07, 'increment': 27, 
+    'stepTime': 0.116832191653228, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 27, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832687155094, 
+    'attempts': 1, 'timeIncrement': 4.95501865458437e-07, 'increment': 28, 
+    'stepTime': 0.116832687155094, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 28, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832687155094, 
+    'attempts': ' 1U', 'timeIncrement': 7.43252798187655e-07, 'increment': 29, 
+    'stepTime': 0.116832687155094, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 8, 'phase': STANDARD_PHASE, 'equilibrium': 8})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832872968293, 
+    'attempts': 2, 'timeIncrement': 1.85813199546914e-07, 'increment': 29, 
+    'stepTime': 0.116832872968293, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 29, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832872968293, 
+    'attempts': ' 1U', 'timeIncrement': 2.78719799320371e-07, 'increment': 30, 
+    'stepTime': 0.116832872968293, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 10, 'phase': STANDARD_PHASE, 'equilibrium': 10})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832942648243, 
+    'attempts': 2, 'timeIncrement': 6.96799498300926e-08, 'increment': 30, 
+    'stepTime': 0.116832942648243, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 30, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832942648243, 
+    'attempts': ' 1U', 'timeIncrement': 1.04519924745139e-07, 'increment': 31, 
+    'stepTime': 0.116832942648243, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832968778224, 
+    'attempts': 2, 'timeIncrement': 2.61299811862847e-08, 'increment': 31, 
+    'stepTime': 0.116832968778224, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 31, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832968778224, 
+    'attempts': ' 1U', 'timeIncrement': 3.91949717794271e-08, 'increment': 32, 
+    'stepTime': 0.116832968778224, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832978576967, 
+    'attempts': 2, 'timeIncrement': 9.79874294485678e-09, 'increment': 32, 
+    'stepTime': 0.116832978576967, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 32, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832978576967, 
+    'attempts': ' 1U', 'timeIncrement': 1.46981144172852e-08, 'increment': 33, 
+    'stepTime': 0.116832978576967, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 7, 'phase': STANDARD_PHASE, 'equilibrium': 7})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832978576967, 
+    'attempts': ' 2U', 'timeIncrement': 3.67452860432129e-09, 'increment': 33, 
+    'stepTime': 0.116832978576967, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 5, 'phase': STANDARD_PHASE, 'equilibrium': 5})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832979495599, 
+    'attempts': 3, 'timeIncrement': 9.18632151080323e-10, 'increment': 33, 
+    'stepTime': 0.116832979495599, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 33, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832980873547, 
+    'attempts': 1, 'timeIncrement': 1.37794822662048e-09, 'increment': 34, 
+    'stepTime': 0.116832980873547, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 34, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832980873547, 
+    'attempts': ' 1U', 'timeIncrement': 2.06692233993073e-09, 'increment': 35, 
+    'stepTime': 0.116832980873547, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981390278, 
+    'attempts': 2, 'timeIncrement': 5.16730584982682e-10, 'increment': 35, 
+    'stepTime': 0.116832981390278, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 35, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981390278, 
+    'attempts': ' 1U', 'timeIncrement': 7.75095877474022e-10, 'increment': 36, 
+    'stepTime': 0.116832981390278, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981584052, 
+    'attempts': 2, 'timeIncrement': 1.93773969368506e-10, 'increment': 36, 
+    'stepTime': 0.116832981584052, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 36, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981584052, 
+    'attempts': ' 1U', 'timeIncrement': 2.90660954052758e-10, 'increment': 37, 
+    'stepTime': 0.116832981584052, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981656717, 
+    'attempts': 2, 'timeIncrement': 7.26652385131896e-11, 'increment': 37, 
+    'stepTime': 0.116832981656717, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 37, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981656717, 
+    'attempts': ' 1U', 'timeIncrement': 1.08997857769784e-10, 'increment': 38, 
+    'stepTime': 0.116832981656717, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981683967, 
+    'attempts': 2, 'timeIncrement': 2.72494644424461e-11, 'increment': 38, 
+    'stepTime': 0.116832981683967, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 38, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981724841, 
+    'attempts': 1, 'timeIncrement': 4.08741966636691e-11, 'increment': 39, 
+    'stepTime': 0.116832981724841, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 39, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981724841, 
+    'attempts': ' 1U', 'timeIncrement': 6.13112949955037e-11, 'increment': 40, 
+    'stepTime': 0.116832981724841, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981724841, 
+    'attempts': ' 2U', 'timeIncrement': 1.53278237488759e-11, 'increment': 40, 
+    'stepTime': 0.116832981724841, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981728673, 
+    'attempts': 3, 'timeIncrement': 3.83195593721898e-12, 'increment': 40, 
+    'stepTime': 0.116832981728673, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 40, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981734421, 
+    'attempts': 1, 'timeIncrement': 5.74793390582847e-12, 'increment': 41, 
+    'stepTime': 0.116832981734421, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 41, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981734421, 
+    'attempts': ' 1U', 'timeIncrement': 8.62190085874271e-12, 'increment': 42, 
+    'stepTime': 0.116832981734421, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981734421, 
+    'attempts': ' 2U', 'timeIncrement': 2.15547521468568e-12, 'increment': 42, 
+    'stepTime': 0.116832981734421, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.11683298173496, 
+    'attempts': 3, 'timeIncrement': 5.38868803671419e-13, 'increment': 42, 
+    'stepTime': 0.11683298173496, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 42, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.11683298173496, 
+    'attempts': ' 1U', 'timeIncrement': 8.08303205507129e-13, 'increment': 43, 
+    'stepTime': 0.11683298173496, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735162, 
+    'attempts': 2, 'timeIncrement': 2.02075801376782e-13, 'increment': 43, 
+    'stepTime': 0.116832981735162, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 43, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735465, 
+    'attempts': 1, 'timeIncrement': 3.03113702065173e-13, 'increment': 44, 
+    'stepTime': 0.116832981735465, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 44, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735465, 
+    'attempts': ' 1U', 'timeIncrement': 4.5467055309776e-13, 'increment': 45, 
+    'stepTime': 0.116832981735465, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735579, 
+    'attempts': 2, 'timeIncrement': 1.1366763827444e-13, 'increment': 45, 
+    'stepTime': 0.116832981735579, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 45, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735579, 
+    'attempts': ' 1U', 'timeIncrement': 1.7050145741166e-13, 'increment': 46, 
+    'stepTime': 0.116832981735579, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735621, 
+    'attempts': 2, 'timeIncrement': 4.2625364352915e-14, 'increment': 46, 
+    'stepTime': 0.116832981735621, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 46, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735621, 
+    'attempts': ' 1U', 'timeIncrement': 6.39380465293725e-14, 'increment': 47, 
+    'stepTime': 0.116832981735621, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735637, 
+    'attempts': 2, 'timeIncrement': 1.59845116323431e-14, 'increment': 47, 
+    'stepTime': 0.116832981735637, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 47, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735637, 
+    'attempts': ' 1U', 'timeIncrement': 2.39767674485147e-14, 'increment': 48, 
+    'stepTime': 0.116832981735637, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735647, 
+    'attempts': 2, 'timeIncrement': 1e-14, 'increment': 48, 
+    'stepTime': 0.116832981735647, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 1, 'phase': STANDARD_PHASE, 'equilibrium': 1})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 48, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735647, 
+    'attempts': ' 1U', 'timeIncrement': 1.5e-14, 'increment': 49, 
+    'stepTime': 0.116832981735647, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'Time increment required is less than the minimum specified', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(STATUS, {'totalTime': 0.116832981735647, 
+    'attempts': ' 2U', 'timeIncrement': 1e-14, 'increment': 49, 
+    'stepTime': 0.116832981735647, 'step': 1, 'jobName': 'DD-shell', 
+    'severe': 0, 'iterations': 4, 'phase': STANDARD_PHASE, 'equilibrium': 4})
+mdb.jobs['DD-shell']._Message(ODB_FRAME, {'phase': STANDARD_PHASE, 'step': 0, 
+    'frame': 49, 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(ERROR, {'phase': STANDARD_PHASE, 
+    'message': 'THE ANALYSIS HAS BEEN TERMINATED DUE TO PREVIOUS ERRORS. ALL OUTPUT REQUESTS HAVE BEEN WRITTEN FOR THE LAST CONVERGED INCREMENT.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(ABORTED, {'phase': STANDARD_PHASE, 
+    'message': 'Analysis phase failed due to errors', 'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(ERROR, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'DD-shell'})
+mdb.jobs['DD-shell']._Message(JOB_ABORTED, {
+    'message': 'Abaqus/Standard Analysis exited with an error - Please see the  message file for possible error messages if the file exists.', 
+    'jobName': 'DD-shell'})
+# Save by mohab on 2021_10_26-16.26.15; build 2021 2020_03_06-18.20.37 167380
